@@ -44,6 +44,18 @@
 - Adafruit BMP280
 - WiFiManager
 - ESP32Time
+  
+## 🔌 Підключення
+
+| Компонент | Пін ESP32 |
+|-----------|-----------|
+| BMP280 SDA | GPIO27 |
+| BMP280 SCL | GPIO22 |
+| RGB LED Red | GPIO16 |
+| RGB LED Green | GPIO4 |
+| RGB LED Blue | GPIO17 |
+| LDR | GPIO34 |
+| TFT Backlight | GPIO21 |
 
 ### Налаштування
 1. Отримайте API ключ OpenWeatherMap
