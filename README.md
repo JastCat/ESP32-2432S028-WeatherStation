@@ -1,3 +1,6 @@
+![PlatformIO](https://img.shields.io/badge/platformio-ESP32-orange)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-1.0-blue)
 # ESP32-2432S028 Weather Station (Enhanced Edition)
 
 Покращена версія метеостанції на базі ESP32-2432S028 (Cheap Yellow Display).
