@@ -50,7 +50,9 @@
 4. Завантажте код через PlatformIO
 
 ## 📷 Скріншоти
-(додайте фото вашого пристрою)
+![IMG_0393](https://github.com/user-attachments/assets/c2bbe9ad-9b21-48a4-b49c-c8893ed5e2bd)
+![IMG_0392](https://github.com/user-attachments/assets/44340637-c1b9-49d1-ade3-e7e76ef33f50)
+
 
 ## 📜 Ліцензія
 MIT License - див. файл [LICENSE](LICENSE)
