@@ -70,8 +70,6 @@ bool updateInternalTemperature(void *) {
     bmpTemperature = bmp.readTemperature();
     bmpPressure = bmp.readPressure() / 100.0F;
     Serial.printf("🏠 Внутрішня: %.1f°C, Тиск: %.1f hPa\n", bmpTemperature, bmpPressure);
-    // ОНОВЛЮЄМО ТІЛЬКИ НИЖНЮ ЧАСТИНУ
-    drawForecast(0, 0, 0, 0);
   }
   return true;
 }
