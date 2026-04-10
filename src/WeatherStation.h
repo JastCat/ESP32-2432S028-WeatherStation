@@ -42,7 +42,7 @@ const String townLat = "50.06143";
 const String townLon = "19.93658";
 
 // OpenWeatherMap API
-const String owmApiKey = "5840935ef5e188a4502b270103491987";
+const String owmApiKey = "  ";
 
 WebServer server(80);
 
