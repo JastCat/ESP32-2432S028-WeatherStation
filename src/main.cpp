@@ -5,15 +5,16 @@
 #include <Adafruit_BMP280.h>
 
 // ==================== RGB LED ПІНИ ====================
-#define RGB_RED 16
-#define RGB_GREEN 4
+// Пін 4 → червоний, Пін 16 → зелений, Пін 17 → синій
+#define RGB_RED 4
+#define RGB_GREEN 16
 #define RGB_BLUE 17
 
 // ==================== LDR НАЛАШТУВАННЯ ДЛЯ ПІДСВІТКИ ====================
 #define LDR_PIN 34
-#define LDR_DARK 0
+#define LDR_DARK 10
 #define LDR_LIGHT 200
-#define MIN_BRIGHTNESS 15
+#define MIN_BRIGHTNESS 5
 #define MAX_BRIGHTNESS 200
 
 // ==================== BMP280 ====================
@@ -34,22 +35,71 @@ auto timer = timer_create_default();
 void setRGBbyTemperature(float temp) {
   int red = 0, green = 0, blue = 0;
   
-  if (temp < -5) { red = 0; green = 0; blue = 255; }
-  else if (temp < 0) { red = 0; green = map(temp, -5, 0, 0, 100); blue = 255; }
-  else if (temp < 10) { red = 0; green = map(temp, 0, 10, 100, 255); blue = map(temp, 0, 10, 255, 100); }
-  else if (temp < 18) { red = 0; green = 255; blue = map(temp, 10, 18, 100, 51); }
-  else if (temp < 20) { red = map(temp, 18, 20, 0, 100); green = 255; blue = 0; }
-  else if (temp < 25) { red = map(temp, 20, 25, 100, 255); green = 255; blue = 0; }
-  else if (temp < 30) { red = 255; green = map(temp, 25, 30, 255, 100); blue = 0; }
-  else { red = 255; green = 0; blue = 0; }
+  // Для від'ємних температур (холодні тони - синій, фіолетовий)
+  if (temp < -15) {
+    // Дуже холодно: темно-синій
+    red = 0; green = 0; blue = 255;
+  }
+  else if (temp < -10) {
+    // -15 до -10: синьо-фіолетовий
+    red = map(temp, -15, -10, 0, 80);
+    green = 0;
+    blue = 255;
+  }
+  else if (temp < -5) {
+    // -10 до -5: фіолетовий
+    red = map(temp, -10, -5, 80, 160);
+    green = 0;
+    blue = 255;
+  }
+  else if (temp < 0) {
+    // -5 до 0: світло-фіолетовий
+    red = map(temp, -5, 0, 160, 255);
+    green = 0;
+    blue = 255;
+  }
+  // Для додатних температур (теплі тони - зелений, жовтий, червоний)
+  else if (temp < 5) {
+    // 0 до 5: зелений
+    red = 0; green = 255; blue = 0;
+  }
+  else if (temp < 10) {
+    // 5 до 10: жовто-зелений
+    red = map(temp, 5, 10, 0, 100);
+    green = 255;
+    blue = 0;
+  }
+  else if (temp < 15) {
+    // 10 до 15: жовтий
+    red = map(temp, 10, 15, 100, 255);
+    green = 255;
+    blue = 0;
+  }
+  else if (temp < 20) {
+    // 15 до 20: оранжевий
+    red = 255;
+    green = map(temp, 15, 20, 255, 150);
+    blue = 0;
+  }
+  else if (temp < 25) {
+    // 20 до 25: червоно-оранжевий
+    red = 255;
+    green = map(temp, 20, 25, 150, 80);
+    blue = 0;
+  }
+  else {
+    // 25+ : червоний
+    red = 255; green = 0; blue = 0;
+  }
   
   red = constrain(red, 0, 255);
   green = constrain(green, 0, 255);
   blue = constrain(blue, 0, 255);
   
-  analogWrite(RGB_RED, red);
-  analogWrite(RGB_GREEN, green);
-  analogWrite(RGB_BLUE, blue);
+  // ІНВЕРСІЯ для спільного анода (ВАЖЛИВО!)
+  analogWrite(RGB_RED, 255 - red);
+  analogWrite(RGB_GREEN, 255 - green);
+  analogWrite(RGB_BLUE, 255 - blue);
   
   Serial.printf("🌡️ Temp: %.1f°C → RGB: %d,%d,%d\n", temp, red, green, blue);
 }
@@ -243,10 +293,10 @@ bool getForecast(void *) {
       
       setRGBbyTemperature(currTemp);
       
-      // ПРИМУСОВЕ ОНОВЛЕННЯ ВСЬОГО ЕКРАНУ
-      drawTime(NULL);
-      drawSensor(fromSensor.t, fromSensor.h, fromSensor.b, WS_WHITE);
-      drawForecast(wmoCode, minT, maxT, rainProba);
+      // 5. ОНОВЛЮЄМО ДИСПЛЕЙ - ВСЕ РАЗОМ!
+      drawTime(NULL);                                    // Час
+      drawSensor(fromSensor.t, fromSensor.h, fromSensor.b, WS_WHITE);  // Температура + вологість
+      drawForecast(wmoCode, minT, maxT, rainProba);      // Прогноз
       
       Serial.println("✅ Display updated");
     }
